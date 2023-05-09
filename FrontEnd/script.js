@@ -26,12 +26,31 @@ function displayWorks(works) {
     }
 }
 
+function filterWorks(works) {
+    // BOUTONS
+    // On supprime les doublons de catégories en passant par Set
+    let categoryName = new Set(works.map(works => works.category.name))
+    let category = [...new Set(categoryName)]
+    // On ajoute une catégorie "tous" au début du tableau
+    category.unshift("Tous");
+    console.log(category);
+    // On crée les boutons de filtres
+    for (i = 0; i < category.length; i++) {
+        const buttonContainer = document.querySelector(".filters-btn__container")
+        const buttonElement = document.createElement("button")
+        buttonElement.innerText = category[i];
+        buttonContainer.appendChild(buttonElement);
+    }
+}
+
 
 async function init() {
     // on veut récupérer la liste des works
     const works = await loadWorks()
     // on veut afficher la liste des works dans la page
     displayWorks(works)
+    // on veut filtrer les travaux
+    filterWorks(works)
 }
 
 init()
