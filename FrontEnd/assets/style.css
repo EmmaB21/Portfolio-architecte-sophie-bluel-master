@@ -121,6 +121,10 @@ li:hover {
 #introduction p {
 	margin-bottom: 0.5em;
 }
+
+#portfolio {
+	margin: 140px 0;
+}
 #portfolio h2 {
 	text-align: center;
 	margin-bottom: 1em;
@@ -129,6 +133,24 @@ li:hover {
 .filters-btn__container{
 	width: 100%;
 	text-align: center;
+	margin: 40px 0;
+}
+
+.filters-btn__container > button {
+	height: 37px;
+	color: #1D6154;
+	background-color: white;
+	border: 1px solid #1d6154;
+	border-radius: 60px;
+	font-size: 16px;
+	font-weight: 700;
+	padding: 10px 20px;
+	margin: 6px;
+}
+.filters-btn__container > button:focus {
+	color: white;
+	background-color: #1D6154;
+	transition: 300ms ease;
 }
 
 .gallery {

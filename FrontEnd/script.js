@@ -2,7 +2,6 @@
 async function loadWorks() {
     const response = await fetch("http://localhost:5678/api/works")
     const works = await response.json()
-    console.log(works)
     return works
 }
 
@@ -33,7 +32,6 @@ function filterWorks(works) {
     let category = [...new Set(categoryName)]
     // On ajoute une catégorie "tous" au début du tableau
     category.unshift("Tous");
-    console.log(category);
     // On crée les boutons de filtres
     for (i = 0; i < category.length; i++) {
         const buttonContainer = document.querySelector(".filters-btn__container")
@@ -41,6 +39,27 @@ function filterWorks(works) {
         buttonElement.innerText = category[i];
         buttonContainer.appendChild(buttonElement);
     }
+
+    // FILTRES
+    // On sélectionne les boutons de filtre
+    const FilterButtons = document.querySelectorAll(".filters-btn__container > button");
+    console.log(FilterButtons);
+    // On met un listener sur chaque bouton
+    FilterButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            // On met à jour l'affichage
+            document.querySelector(".gallery").innerHTML = '';
+            // On filtre les projets par le nom de la catégorie
+            let filteredWorks = works.filter((worksName) => {
+                return worksName.category.name == button.textContent || button.textContent == "Tous"
+            })
+            console.log(filteredWorks)
+            // On affiche les projets filtrés
+            displayWorks(filteredWorks);
+        })
+        console.log(button)
+    });
+
 }
 
 
