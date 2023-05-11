@@ -95,6 +95,15 @@ nav li {
 	font-size: 1.2em;
 }
 
+nav a {
+	text-decoration: none;
+	color: black;
+}
+
+nav a:hover {
+	color: #B1663C;
+}
+
 li:hover {
 	color: #B1663C;
 }
@@ -138,13 +147,14 @@ li:hover {
 
 .filters-btn__container > button {
 	height: 37px;
+	min-width: 100px;
 	color: #1D6154;
 	background-color: white;
 	border: 1px solid #1d6154;
 	border-radius: 60px;
 	font-size: 16px;
 	font-weight: 700;
-	padding: 10px 20px;
+	padding: 10px 15px;
 	margin: 6px;
 }
 .filters-btn__container > button:focus {
@@ -167,29 +177,29 @@ li:hover {
 }
 #contact {
 	width: 50%;
-margin: auto;
+	margin: auto;
 }
-#contact > * {
+#contact > *, #login_form > * {
 	text-align: center;
 
 }
-#contact h2{
+#contact h2, #login_form h2{
 	margin-bottom: 20px;
 }
-#contact form {
+#contact form, #login_form form {
 	text-align: left;
 	margin-top:30px;
 	display: flex;
 	flex-direction: column;
 }
 
-#contact input {
-	height: 50px;
+#contact input, #login_form input {
+	height: 36px;
 	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
-#contact label {
+#contact label, #login_form label {
 	margin: 2em 0 1em 0;
 }
 #contact textarea {
@@ -208,9 +218,22 @@ input[type="submit"]{
 	border-radius: 60px ;
 }
 
+
+#login_form {
+	width: 50%;
+	margin: auto;
+	padding: 160px 0 350px 0;
+}
+
+#login_form p {
+	text-decoration: underline;
+}
+
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
 	margin: 2em
 }
+
+
 
