@@ -15,10 +15,6 @@ function login() {
                 "Content-Type": "application/json" },
             body: JSON.stringify(logData)
         })
-        .then(response => console.log(response)) 
-        .catch(console.log("error"))
-        
     })
 }
-
 login()
