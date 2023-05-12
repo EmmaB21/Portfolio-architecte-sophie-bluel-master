@@ -43,7 +43,6 @@ function filterWorks(works) {
     // FILTRES
     // On sélectionne les boutons de filtre
     const FilterButtons = document.querySelectorAll(".filters-btn__container > button");
-    console.log(FilterButtons);
     // On met un listener sur chaque bouton
     FilterButtons.forEach(button => {
         button.addEventListener("click", () => {
@@ -53,11 +52,9 @@ function filterWorks(works) {
             let filteredWorks = works.filter((worksName) => {
                 return worksName.category.name == button.textContent || button.textContent == "Tous"
             })
-            console.log(filteredWorks)
             // On affiche les projets filtrés
             displayWorks(filteredWorks);
         })
-        console.log(button)
     });
 
 }

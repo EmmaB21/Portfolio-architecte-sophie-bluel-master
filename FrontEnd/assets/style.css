@@ -175,34 +175,34 @@ li:hover {
 	width: 100%;
 
 }
-#contact {
+.contact {
 	width: 50%;
 	margin: auto;
 }
-#contact > *, #login_form > * {
+.contact > *, .login_section > * {
 	text-align: center;
 
 }
-#contact h2, #login_form h2{
+.contact h2, .login_section h2{
 	margin-bottom: 20px;
 }
-#contact form, #login_form form {
+.contact form, .login_form {
 	text-align: left;
 	margin-top:30px;
 	display: flex;
 	flex-direction: column;
 }
 
-#contact input, #login_form input {
-	height: 36px;
+.contact input, .login_form input {
+	height: 50px;
 	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
-#contact label, #login_form label {
+.contact label, .login_form label {
 	margin: 2em 0 1em 0;
 }
-#contact textarea {
+.contact textarea {
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
@@ -215,17 +215,22 @@ input[type="submit"]{
 	margin : 2em auto ;
 	width: 180px;
 	text-align: center;
-	border-radius: 60px ;
+	border-radius: 60px;
+	height: 36px;
+}
+
+.nav_login {
+	font-weight: 600;
 }
 
 
-#login_form {
+.login_section {
 	width: 50%;
 	margin: auto;
 	padding: 160px 0 350px 0;
 }
 
-#login_form p {
+.login_section p {
 	text-decoration: underline;
 }
 
