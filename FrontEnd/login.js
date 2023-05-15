@@ -12,11 +12,13 @@ function login() {
         // On envoie les données
         const response = await fetch("http://localhost:5678/api/users/login", {
             method: "POST",
-            headers: { 
+            headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json" },
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(logData)
         })
+            .catch(error.textContent = "Problème de connexion au serveur")
         // On stocke le token récupéré dans le localStorage
         const token = response.json;
         localStorage.setItem("token", token);
@@ -24,4 +26,5 @@ function login() {
         (response.ok) ? window.location.href = "./index.html" : error.textContent = "Nom d'utilisateur ou mot de passe incorrect"
     })
 }
+
 login()

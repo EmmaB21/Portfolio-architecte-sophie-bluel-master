@@ -9,12 +9,20 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap"
 		rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+		integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+		crossorigin="anonymous" referrerpolicy="no-referrer">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
 	<script src="script.js" defer></script>
 </head>
 
 <body>
+	<div class="mode-edition hide">
+		<i class="fa-regular fa-pen-to-square edition"></i>
+		<p class="edition__p">Mode édition</p>
+		<button class="edition__btn">Publier les changements</button>
+	</div>
 	<header>
 		<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 		<nav>
@@ -26,7 +34,7 @@
 					<a href="#contact">contact</a>
 				</li>
 				<li>
-					<a href="./login.html">login</a>
+					<a class="login__link" href="./login.html">login</a>
 				</li>
 				<li>
 					<img src="./assets/icons/instagram.png" alt="Instagram">
@@ -38,7 +46,12 @@
 		<section id="introduction">
 			<figure>
 				<img src="./assets/images/sophie-bluel.png" alt="">
+				<div class="modif hide">
+					<i class="fa-regular fa-pen-to-square"></i>
+					<p>modifier</p>
+				</div>
 			</figure>
+
 			<article>
 				<h2>Designer d'espace</h2>
 				<p>Je raconte votre histoire, je valorise vos idées. Je vous accompagne de la conception à la livraison
@@ -47,11 +60,15 @@
 					couleurs dans le respect de l’esprit des lieux et le choix adapté des matériaux. Le suivi du
 					chantier sera assuré dans le souci du détail, le respect du planning et du budget.</p>
 				<p>En cas de besoin, une équipe pluridisciplinaire peut-être constituée : architecte DPLG,
-					décorateur(trice)</p> 
+					décorateur(trice)</p>
 			</article>
 		</section>
 		<section id="portfolio">
-			<h2>Mes Projets</h2>
+			<div class="portfolio__title">
+				<h2>Mes Projets</h2>
+				<i class="fa-regular fa-pen-to-square hide"></i>
+				<p class="hide">modifier</p>
+			</div>
 			<div class="gallery-section">
 				<div class="filters-btn__container">
 				</div>

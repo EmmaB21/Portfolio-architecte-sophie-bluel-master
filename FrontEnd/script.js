@@ -2,7 +2,7 @@
 async function loadWorks() {
     const response = await fetch("http://localhost:5678/api/works")
     const works = await response.json()
-    return works 
+    return works
 }
 
 
@@ -39,7 +39,6 @@ function filterWorks(works) {
         buttonElement.innerText = category[i];
         buttonContainer.appendChild(buttonElement);
     }
-
     // FILTRES
     // On sélectionne les boutons de filtre
     const FilterButtons = document.querySelectorAll(".filters-btn__container button");
@@ -56,7 +55,20 @@ function filterWorks(works) {
             displayWorks(filteredWorks);
         })
     });
+}
 
+function logged() {
+    const loginLink = document.querySelector(".login__link");
+    const toHide = document.querySelectorAll(".hide");
+    console.log(toHide);
+    let token = localStorage.getItem("token")
+    const isLogged = token ? true : false;
+    console.log(isLogged);
+    (isLogged) ? loginLink.innerHTML = "logout" : "login";
+    // (isLogged) && toHide[i].classList.toggle("hide");
+    loginLink.addEventListener("click", () => {
+        localStorage.removeItem("token");
+    })
 }
 
 
@@ -67,6 +79,8 @@ async function init() {
     displayWorks(works)
     // on veut filtrer les travaux
     filterWorks(works)
+    // on modifie la page après identification
+    logged()
 }
 
 init()
