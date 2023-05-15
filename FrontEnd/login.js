@@ -1,20 +1,27 @@
 
 function login() {
+    // On récupère les données à envoyer
     const loginForm = document.querySelector(".login_form");
-    loginForm.addEventListener("submit", function (event) {
+    const error = document.querySelector(".error")
+    loginForm.addEventListener("submit", async (event) => {
         event.preventDefault();
         const logData = {
             email: event.target.querySelector("[name=email]").value,
             password: event.target.querySelector("[name=motDePasse]").value
         }
-        console.log(JSON.stringify(logData))
-        fetch("http://localhost:5678/api/users/login", {
+        // On envoie les données
+        const response = await fetch("http://localhost:5678/api/users/login", {
             method: "POST",
             headers: { 
                 "Accept": "application/json",
                 "Content-Type": "application/json" },
             body: JSON.stringify(logData)
         })
+        // On stocke le token récupéré dans le localStorage
+        const token = response.json;
+        localStorage.setItem("token", token);
+        // on redirige ou on affiche un message d'erreur
+        (response.ok) ? window.location.href = "./index.html" : error.textContent = "Nom d'utilisateur ou mot de passe incorrect"
     })
 }
 login()

@@ -234,6 +234,11 @@ input[type="submit"]{
 	text-decoration: underline;
 }
 
+.error {
+	color: darkred;
+	font-weight: 600;
+}
+
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;

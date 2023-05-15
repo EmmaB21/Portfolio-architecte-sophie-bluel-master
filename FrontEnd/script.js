@@ -42,7 +42,7 @@ function filterWorks(works) {
 
     // FILTRES
     // On sélectionne les boutons de filtre
-    const FilterButtons = document.querySelectorAll(".filters-btn__container > button");
+    const FilterButtons = document.querySelectorAll(".filters-btn__container button");
     // On met un listener sur chaque bouton
     FilterButtons.forEach(button => {
         button.addEventListener("click", () => {
