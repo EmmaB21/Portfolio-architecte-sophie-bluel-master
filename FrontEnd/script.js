@@ -58,19 +58,52 @@ function filterWorks(works) {
 }
 
 function logged() {
+    // On récupère le token
     const loginLink = document.querySelector(".login__link");
-    const toHide = document.querySelectorAll(".hide");
-    console.log(toHide);
     let token = localStorage.getItem("token")
     const isLogged = token ? true : false;
     console.log(isLogged);
+    // On modifie l'affichage du lien login
     (isLogged) ? loginLink.innerHTML = "logout" : "login";
-    // (isLogged) && toHide[i].classList.toggle("hide");
     loginLink.addEventListener("click", () => {
         localStorage.removeItem("token");
     })
+    // On modifie l'affichage du mode édition
+    if (isLogged) {
+        const modeEdition = document.querySelector(".mode-edition");
+        modeEdition.classList.add("mode-edition-css");
+        const iconeElement = document.createElement("i");
+        iconeElement.classList.add("fa-regular", "fa-pen-to-square");
+        const textElement = document.createElement("p");
+        textElement.innerHTML = "Mode édition";
+        const buttonElement = document.createElement("button");
+        buttonElement.innerText = "Publier les changements";
+        modeEdition.appendChild(iconeElement);
+        modeEdition.appendChild(textElement);
+        modeEdition.appendChild(buttonElement);
+
+        const photoEdition = document.querySelector(".modif");
+        const iconePhotoElement = document.createElement ("i");
+        iconePhotoElement.classList.add("fa-regular", "fa-pen-to-square")
+        const textPhotoElement = document.createElement("p");
+        textPhotoElement.innerText = "modifier";
+        photoEdition.appendChild(iconePhotoElement);
+        photoEdition.appendChild(textPhotoElement);
+
+        const portfolioEdition = document.querySelector(".portfolio__title");
+        const iconePortfolioElement = document.createElement ("i");
+        iconePortfolioElement.classList.add("fa-regular", "fa-pen-to-square")
+        const textPortfolioElement = document.createElement("p");
+        textPortfolioElement.innerText = "modifier";
+        portfolioEdition.appendChild(iconePortfolioElement);
+        portfolioEdition.appendChild(textPortfolioElement);
+
+        const buttonContainerEdition = document.querySelector(".filters-btn__container");
+        buttonContainerEdition.classList.add("buttonHide");
+    }
 }
 
+          
 
 async function init() {
     // on veut récupérer la liste des works
