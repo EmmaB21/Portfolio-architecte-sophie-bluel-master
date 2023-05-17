@@ -56,7 +56,7 @@ function filterWorks(works) {
     });
 }
 
-function setModification(nameObjectHtml, textHtml, AddButton) {
+function setModification(nameObjectHtml, textHtml) {
     const Element = document.querySelector(nameObjectHtml);
     const icone = document.createElement("i");
     const text = document.createElement("p");
@@ -67,11 +67,14 @@ function setModification(nameObjectHtml, textHtml, AddButton) {
     Element.appendChild(icone);
     Element.appendChild(text);
 
-    if (AddButton) {
+    if (nameObjectHtml == ".mode-edition") {
         Element.classList.add("mode-edition-css");
         const buttonElement = document.createElement("button");
         buttonElement.innerText = "Publier les changements";
         Element.appendChild(buttonElement);
+    }
+    else if (nameObjectHtml == ".portfolio__title") {
+        text.classList.add("modalLink")
     }
 }
 
@@ -88,13 +91,24 @@ function logged() {
     })
     // On modifie l'affichage du mode édition
     if (isLogged) {
-        setModification(".mode-edition", "Mode édition", true)
-        setModification(".modif", "modifier", false)
-        setModification(".portfolio__title", "modifier", false)
+        setModification(".mode-edition", "Mode édition")
+        setModification(".modif", "modifier")
+        setModification(".portfolio__title", "modifier")
 
         const buttonContainerEdition = document.querySelector(".filters-btn__container");
         buttonContainerEdition.classList.add("filter-buttons--hide");
     }
+}
+
+function openModal() {
+    const openModalLink = document.querySelector(".modalLink");
+    console.log(openModalLink)
+    openModalLink.addEventListener("click", (e) => {
+        console.log(e)
+        const displayModal = document.querySelector(".modal");
+        displayModal.classList.remove("modalHide");
+
+    });
 }
 
 async function init() {
@@ -106,6 +120,7 @@ async function init() {
     filterWorks(works)
     // on modifie la page après identification
     logged()
+    openModal()
 }
 
 init()
