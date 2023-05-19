@@ -56,8 +56,10 @@ function filterWorks(works) {
     });
 }
 
-function setModification(nameObjectHtml, textHtml) {
-    const Element = document.querySelector(nameObjectHtml);
+// fonction de modification de l'affichage en Mode Edition
+function setModification(classObjectHtml, textHtml) {
+    // on récupère et on crée les éléments à modifier
+    const Element = document.querySelector(classObjectHtml);
     const icone = document.createElement("i");
     const text = document.createElement("p");
 
@@ -67,13 +69,14 @@ function setModification(nameObjectHtml, textHtml) {
     Element.appendChild(icone);
     Element.appendChild(text);
 
-    if (nameObjectHtml == ".mode-edition") {
+    // on personnalise l'élément à modifier
+    if (classObjectHtml == ".mode-edition") {
         Element.classList.add("mode-edition-css");
         const buttonElement = document.createElement("button");
         buttonElement.innerText = "Publier les changements";
         Element.appendChild(buttonElement);
     }
-    else if (nameObjectHtml == ".portfolio__title") {
+    else if (classObjectHtml == ".portfolio__title") {
         text.classList.add("modalLink")
     }
 }
@@ -101,15 +104,52 @@ function logged() {
 }
 
 function openModal() {
+    // on récupère le lien d'ouverture de la modale
     const openModalLink = document.querySelector(".modalLink");
     console.log(openModalLink)
+    // au clic, on affiche la modale en supprimant la classe css contenant le display:none
     openModalLink.addEventListener("click", (e) => {
         console.log(e)
         const displayModal = document.querySelector(".modal");
         displayModal.classList.remove("modalHide");
-
+        // on met en place les modalités de fermeture de la modale
+        displayModal.addEventListener("click", closeModal);
+        const closeModalLink = document.querySelector(".fa-xmark");
+        closeModalLink.addEventListener("click", closeModal);
+        displayModal.querySelector(".modal-wrapper").addEventListener("click", (e => e.stopPropagation()));
     });
 }
+
+function closeModal() {
+    // on ferme la modale en remettant la classe css contenant le display:none
+    const hideModal = document.querySelector(".modal");
+    hideModal.classList.add("modalHide");
+};
+
+function displayWorksInModal(works) {
+    // on affiche les travaux dans la modale (cf displayWorks)
+    for (let i = 0; i < works.length; i++) {
+        const photo = works[i]
+        const photoContainer = document.querySelector(".photo-ctn");
+        const photoElement = document.createElement("div");
+        photoElement.classList.add("workDiv")
+        const imagePhoto = document.createElement("img");
+        imagePhoto.src = photo.imageUrl;
+        const iconeMovePhoto = document.createElement("i");
+        iconeMovePhoto.classList.add("fa-solid", "fa-up-down-left-right");
+        const iconeTrashPhoto = document.createElement("i");
+        iconeTrashPhoto.classList.add("fa-solid","fa-trash-can");
+        const textPhoto = document.createElement("p");
+        textPhoto.innerText = "éditer";
+        photoContainer.appendChild(photoElement);
+        photoElement.appendChild(imagePhoto);
+        photoElement.appendChild(iconeMovePhoto);
+        photoElement.appendChild(iconeTrashPhoto);
+        photoElement.appendChild(textPhoto);
+    }
+}
+
+
 
 async function init() {
     // on veut récupérer la liste des works
@@ -121,6 +161,8 @@ async function init() {
     // on modifie la page après identification
     logged()
     openModal()
+    closeModal()
+    displayWorksInModal(works)
 }
 
 init()
