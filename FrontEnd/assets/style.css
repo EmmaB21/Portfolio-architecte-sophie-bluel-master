@@ -346,6 +346,8 @@ input[type="submit"] {
 .error {
 	color: #d65353;
 	font-weight: 600;
+	text-align: center;
+	padding-top: 20px;
 }
 
 footer nav ul {
@@ -456,6 +458,12 @@ footer nav ul {
 	position: relative;
 	box-sizing: border-box;
 	border-radius: 10px;
+	animation: scaleIn 300ms ease;
+}
+
+@keyframes scaleIn {
+	from {transform: scale(0.4)};
+	to {transform: scale(1)}
 }
 
 .modal-wrapper h3 {
@@ -514,6 +522,10 @@ footer nav ul {
 .photo-ctn img:hover + .fa-up-down-left-right {
 	opacity : 1;
 	transform: 300ms ease;
+}
+
+.fa-up-down-left-right:hover {
+	opacity: 1;
 }
 
 .photo-ctn .fa-trash-can {

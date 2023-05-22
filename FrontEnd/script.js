@@ -6,6 +6,8 @@ async function loadWorks() {
 }
 
 function displayWorks(works) {
+    // On met à jour l'affichage
+    document.querySelector(".gallery").innerHTML = '';
     for (let i = 0; i < works.length; i++) {
         const figure = works[i];
         // Récupération de l'élément du DOM qui accueillera les projets
@@ -106,10 +108,8 @@ function logged() {
 function openModal() {
     // on récupère le lien d'ouverture de la modale
     const openModalLink = document.querySelector(".modalLink");
-    console.log(openModalLink)
     // au clic, on affiche la modale en supprimant la classe css contenant le display:none
     openModalLink.addEventListener("click", (e) => {
-        console.log(e)
         const displayModal = document.querySelector(".modal");
         displayModal.classList.remove("modalHide");
         // on met en place les modalités de fermeture de la modale
@@ -127,6 +127,7 @@ function closeModal() {
 };
 
 function displayWorksInModal(works) {
+
     // on affiche les travaux dans la modale (cf displayWorks)
     for (let i = 0; i < works.length; i++) {
         const photo = works[i]
@@ -135,21 +136,55 @@ function displayWorksInModal(works) {
         photoElement.classList.add("workDiv")
         const imagePhoto = document.createElement("img");
         imagePhoto.src = photo.imageUrl;
-        const iconeMovePhoto = document.createElement("i");
-        iconeMovePhoto.classList.add("fa-solid", "fa-up-down-left-right");
-        const iconeTrashPhoto = document.createElement("i");
-        iconeTrashPhoto.classList.add("fa-solid","fa-trash-can");
-        const textPhoto = document.createElement("p");
-        textPhoto.innerText = "éditer";
         photoContainer.appendChild(photoElement);
         photoElement.appendChild(imagePhoto);
-        photoElement.appendChild(iconeMovePhoto);
-        photoElement.appendChild(iconeTrashPhoto);
-        photoElement.appendChild(textPhoto);
+
+        // fonctions de création et de fonctionnement des options d'affichage
+        moveWorks(photoElement)
+        deleteWorks(photo, photoElement)
+        editWorks(photoElement)
     }
 }
 
+function moveWorks(photoElement) {
+    // On ajoute l'icône de déplacement
+    const iconeMovePhoto = document.createElement("i");
+    iconeMovePhoto.classList.add("fa-solid", "fa-up-down-left-right");
+    photoElement.appendChild(iconeMovePhoto);
+}
 
+function deleteWorks(works, photoElement) {
+    // On ajoute l'icône de suppression
+    const iconeTrashPhoto = document.createElement("i");
+    iconeTrashPhoto.classList.add("fa-solid", "fa-trash-can");
+    photoElement.appendChild(iconeTrashPhoto);
+
+    // On supprime le projet au clic sur l'icône
+    iconeTrashPhoto.addEventListener("click", async () => {
+        // const error = document.querySelector(".error")
+        const token = JSON.parse(localStorage.getItem("token"));
+        let id = works.id;
+        console.log(id)
+        const response = await fetch(`http://localhost:5678/api/works/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Accept": "*/*",
+                "Authorization": `Bearer ${token.token}`
+            }
+        })
+        console.log(response)
+
+        // On met à jour l'affichage
+        document.querySelector(".photo-ctn").innerHTML = '';
+    })
+}
+
+function editWorks(photoElement) {
+    // On ajoute une option d'édition
+    const textPhoto = document.createElement("p");
+    textPhoto.innerText = "éditer";
+    photoElement.appendChild(textPhoto);
+}
 
 async function init() {
     // on veut récupérer la liste des works
@@ -160,8 +195,11 @@ async function init() {
     filterWorks(works)
     // on modifie la page après identification
     logged()
+    // on affiche la modale
     openModal()
+    // on ferme la modale
     closeModal()
+    // on affiche les travaux dans la modale
     displayWorksInModal(works)
 }
 

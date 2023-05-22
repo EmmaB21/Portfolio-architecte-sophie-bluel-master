@@ -20,8 +20,8 @@ function login() {
         })
             .catch(error.textContent = "Problème de connexion au serveur")
         // On stocke le token récupéré dans le localStorage
-        const token = response.json;
-        localStorage.setItem("token", token);
+        const token = await response.json();
+        localStorage.setItem("token", JSON.stringify(token));
         // on redirige ou on affiche un message d'erreur
         (response.ok) ? window.location.href = "./index.html" : error.textContent = "Nom d'utilisateur ou mot de passe incorrect"
     })
