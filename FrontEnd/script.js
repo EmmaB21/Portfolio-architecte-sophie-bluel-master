@@ -161,7 +161,7 @@ function deleteWorks(works, photoElement) {
 
     // On supprime le projet au clic sur l'icône
     iconeTrashPhoto.addEventListener("click", async () => {
-        // const error = document.querySelector(".error")
+        const error = document.querySelector(".error")
         const token = JSON.parse(localStorage.getItem("token"));
         let id = works.id;
         console.log(id)
@@ -173,9 +173,14 @@ function deleteWorks(works, photoElement) {
             }
         })
         console.log(response)
+        if (response.ok) {photoElement.remove()}
+        else error.textContent = "Erreur. Veuillez essayer de vous reconnecter"
+        // const delStatus = await response.json;
+        // (status.status == 200) ? photoElement[i].remove() : error.textContent = "Erreur"
 
-        // On met à jour l'affichage
-        document.querySelector(".photo-ctn").innerHTML = '';
+        // // On met à jour l'affichage
+        // // document.querySelector(".photo-ctn").innerHTML = '';
+        // displayWorksInModal(works);
     })
 }
 
