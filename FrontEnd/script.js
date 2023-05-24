@@ -86,14 +86,14 @@ function setModification(classObjectHtml, textHtml) {
 function logged() {
     // On récupère le token
     const loginLink = document.querySelector(".login__link");
-    let token = localStorage.getItem("token")
+    let token = sessionStorage.getItem("token")
     console.log(token)
     const isLogged = token ? true : false;
     console.log(isLogged);
     // On modifie l'affichage du lien login
     (isLogged) ? loginLink.innerHTML = "logout" : "login";
     loginLink.addEventListener("click", () => {
-        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
     })
     // On modifie l'affichage du mode édition
     if (isLogged) {
@@ -162,7 +162,7 @@ function deleteWorks(works, photoElement) {
     // On supprime le projet au clic sur l'icône
     iconeTrashPhoto.addEventListener("click", async () => {
         const error = document.querySelector(".error")
-        const token = JSON.parse(localStorage.getItem("token"));
+        const token = JSON.parse(sessionStorage.getItem("token"));
         let id = works.id;
         console.log(id)
         const response = await fetch(`http://localhost:5678/api/works/${id}`, {
