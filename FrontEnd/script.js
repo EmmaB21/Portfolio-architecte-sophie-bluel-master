@@ -87,6 +87,7 @@ function logged() {
     // On récupère le token
     const loginLink = document.querySelector(".login__link");
     let token = localStorage.getItem("token")
+    console.log(token)
     const isLogged = token ? true : false;
     console.log(isLogged);
     // On modifie l'affichage du lien login
@@ -158,7 +159,6 @@ function deleteWorks(works, photoElement) {
     const iconeTrashPhoto = document.createElement("i");
     iconeTrashPhoto.classList.add("fa-solid", "fa-trash-can");
     photoElement.appendChild(iconeTrashPhoto);
-
     // On supprime le projet au clic sur l'icône
     iconeTrashPhoto.addEventListener("click", async () => {
         const error = document.querySelector(".error")
@@ -172,15 +172,19 @@ function deleteWorks(works, photoElement) {
                 "Authorization": `Bearer ${token.token}`
             }
         })
-        console.log(response)
-        if (response.ok) {photoElement.remove()}
-        else error.textContent = "Erreur. Veuillez essayer de vous reconnecter"
-        // const delStatus = await response.json;
-        // (status.status == 200) ? photoElement[i].remove() : error.textContent = "Erreur"
+        if (response.ok) {
+            // error.textContent = "Projet supprimé";
+            // setTimeout(function() {
+            //     error.innerHTML = "";
+            //   }, 600)
 
-        // // On met à jour l'affichage
-        // // document.querySelector(".photo-ctn").innerHTML = '';
-        // displayWorksInModal(works);
+            // On met l'affichage à jour
+            document.querySelector(".photo-ctn").innerHTML = "";
+            const works = await loadWorks();
+            displayWorksInModal(works);
+            displayWorks(works);
+        }
+        else error.textContent = "Erreur. Veuillez essayer de vous reconnecter"
     })
 }
 
@@ -189,6 +193,122 @@ function editWorks(photoElement) {
     const textPhoto = document.createElement("p");
     textPhoto.innerText = "éditer";
     photoElement.appendChild(textPhoto);
+}
+
+function addWorks() {
+    const addButton = document.querySelector(".addButton");
+    addButton.addEventListener("click", () => {
+        const modalWrapper = document.querySelector(".modal-wrapper");
+        modalWrapper.innerHTML = "";
+        createNewModal(modalWrapper)
+        // const iconeBack = document.createElement("i");
+        // iconeBack.classList.add("fa-solid", "fa-arrow-left");
+        // const closeModalLink = document.createElement("i");
+        // closeModalLink.classList.add("fa-solid", "fa-xmark");
+        // closeModalLink.addEventListener("click", closeModal);
+        // const modalAddTitle = document.createElement("h3");
+        // modalAddTitle.textContent= "Ajout photo";
+        // const addBox = document.createElement("div");
+        // addBox.classList.add("addBox");
+        // const iconeImg = document.createElement("i");
+        // iconeImg.classList.add("fa-regular", "fa-image");
+        // const addImgButton = document.createElement("button");
+        // addImgButton.innerText = "+ Ajouter photo";
+        // const addImgText = document.createElement("p");
+        // addImgText.innerText = "jpg, png : 4mo max";
+        // const addForm = document.createElement("form");
+        // const labelInputTitle = document.createElement("label");
+        // labelInputTitle.innerText = "Titre";
+        // const inputTitle = document.createElement("input");
+        // const labelSelectCategory = document.createElement("label");
+        // labelSelectCategory.innerText = "Catégorie";
+        // const selectCategory = document.createElement("select");
+        // modalWrapper.appendChild(iconeBack);
+        // modalWrapper.appendChild(closeModalLink);
+        // modalWrapper.appendChild(modalAddTitle);
+        // modalWrapper.appendChild(addBox);
+        // addBox.appendChild(iconeImg);
+        // addBox.appendChild(addImgButton);
+        // addBox.appendChild(addImgText);
+        // modalWrapper.appendChild(addForm);
+        // addForm.appendChild(labelInputTitle);
+        // addForm.appendChild(inputTitle);
+        // addForm.appendChild(labelSelectCategory);
+        // addForm.appendChild(selectCategory);
+    })
+}
+
+function createNewModal(modalWrapper) {
+    const iconeBack = document.createElement("i");
+    iconeBack.classList.add("fa-solid", "fa-arrow-left");
+    const closeModalLink = document.createElement("i");
+    closeModalLink.classList.add("fa-solid", "fa-xmark");
+    closeModalLink.addEventListener("click", closeModal);
+    const modalAddTitle = document.createElement("h3");
+    modalAddTitle.textContent = "Ajout photo";
+    // const addBox = document.createElement("div");
+    // addBox.classList.add("addBox");
+    // const iconeImg = document.createElement("i");
+    // iconeImg.classList.add("fa-regular", "fa-image");
+    // const addImgButton = document.createElement("button");
+    // addImgButton.innerText = "+ Ajouter photo";
+    // const addImgText = document.createElement("p");
+    // addImgText.innerText = "jpg, png : 4mo max";
+    modalWrapper.appendChild(iconeBack);
+    modalWrapper.appendChild(closeModalLink);
+    modalWrapper.appendChild(modalAddTitle);
+    // modalWrapper.appendChild(addBox);
+    // addBox.appendChild(iconeImg);
+    // addBox.appendChild(addImgButton);
+    // addBox.appendChild(addImgText);
+    createForm(modalWrapper)
+
+}
+
+function createForm(modalWrapper) {
+    const addForm = document.createElement("form");
+    const addBox = document.createElement("div");
+    addBox.classList.add("addBox");
+    const iconeImg = document.createElement("i");
+    iconeImg.classList.add("fa-regular", "fa-image");
+    const addImgButton = document.createElement("input");
+    addImgButton.type = "button";
+    addImgButton.value = "+ Ajouter photo";
+    addImgButton.classList.add("addImgButton")
+    const addImgText = document.createElement("p");
+    addImgText.innerText = "jpg, png : 4mo max";
+    const inputCtn = document.createElement("div")
+    inputCtn.classList.add("inputCtn");
+    const labelInputTitle = document.createElement("label");
+    labelInputTitle.for = "Title";
+    labelInputTitle.innerText = "Titre";
+    const inputTitle = document.createElement("input");
+    inputTitle.id = "Title";
+    inputTitle.type = "text";
+    const labelSelectCategory = document.createElement("label");
+    labelSelectCategory.for = "category";
+    labelSelectCategory.innerText = "Catégorie";
+    const selectCategory = document.createElement("select");
+    selectCategory.id = "category";
+    const border = document.createElement("div");
+    border.classList.add("border");
+    const formSubmitButton = document.createElement ("input");
+    formSubmitButton.classList.add("formSubmitButton");
+    formSubmitButton.type = "button";
+    formSubmitButton.value = "Valider";
+    
+    modalWrapper.appendChild(addForm);
+    addForm.appendChild(addBox);
+    addBox.appendChild(iconeImg);
+    addBox.appendChild(addImgButton);
+    addBox.appendChild(addImgText);
+    addForm.appendChild(inputCtn);
+    inputCtn.appendChild(labelInputTitle);
+    inputCtn.appendChild(inputTitle);
+    inputCtn.appendChild(labelSelectCategory);
+    inputCtn.appendChild(selectCategory);
+    addForm.appendChild(border);
+    addForm.appendChild(formSubmitButton);
 }
 
 async function init() {
@@ -206,6 +326,8 @@ async function init() {
     closeModal()
     // on affiche les travaux dans la modale
     displayWorksInModal(works)
+    // on ajoute un nouveau projet
+    addWorks()
 }
 
 init()
