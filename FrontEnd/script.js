@@ -110,7 +110,7 @@ function openModal() {
     // on récupère le lien d'ouverture de la modale
     const openModalLink = document.querySelector(".modalLink");
     // au clic, on affiche la modale en supprimant la classe css contenant le display:none
-    openModalLink.addEventListener("click", (e) => {
+    openModalLink.addEventListener("click", () => {
         const displayModal = document.querySelector(".modal");
         displayModal.classList.remove("modalHide");
         // on met en place les modalités de fermeture de la modale
@@ -173,11 +173,6 @@ function deleteWorks(works, photoElement) {
             }
         })
         if (response.ok) {
-            // error.textContent = "Projet supprimé";
-            // setTimeout(function() {
-            //     error.innerHTML = "";
-            //   }, 600)
-
             // On met l'affichage à jour
             document.querySelector(".photo-ctn").innerHTML = "";
             const works = await loadWorks();
@@ -195,78 +190,73 @@ function editWorks(photoElement) {
     photoElement.appendChild(textPhoto);
 }
 
-function addWorks() {
+function openAddWorks() {
     const addButton = document.querySelector(".addButton");
+    // au clic, on crée la modale d'ajout de projet
     addButton.addEventListener("click", () => {
         const modalWrapper = document.querySelector(".modal-wrapper");
         modalWrapper.innerHTML = "";
         createNewModal(modalWrapper)
-        // const iconeBack = document.createElement("i");
-        // iconeBack.classList.add("fa-solid", "fa-arrow-left");
-        // const closeModalLink = document.createElement("i");
-        // closeModalLink.classList.add("fa-solid", "fa-xmark");
-        // closeModalLink.addEventListener("click", closeModal);
-        // const modalAddTitle = document.createElement("h3");
-        // modalAddTitle.textContent= "Ajout photo";
-        // const addBox = document.createElement("div");
-        // addBox.classList.add("addBox");
-        // const iconeImg = document.createElement("i");
-        // iconeImg.classList.add("fa-regular", "fa-image");
-        // const addImgButton = document.createElement("button");
-        // addImgButton.innerText = "+ Ajouter photo";
-        // const addImgText = document.createElement("p");
-        // addImgText.innerText = "jpg, png : 4mo max";
-        // const addForm = document.createElement("form");
-        // const labelInputTitle = document.createElement("label");
-        // labelInputTitle.innerText = "Titre";
-        // const inputTitle = document.createElement("input");
-        // const labelSelectCategory = document.createElement("label");
-        // labelSelectCategory.innerText = "Catégorie";
-        // const selectCategory = document.createElement("select");
-        // modalWrapper.appendChild(iconeBack);
-        // modalWrapper.appendChild(closeModalLink);
-        // modalWrapper.appendChild(modalAddTitle);
-        // modalWrapper.appendChild(addBox);
-        // addBox.appendChild(iconeImg);
-        // addBox.appendChild(addImgButton);
-        // addBox.appendChild(addImgText);
-        // modalWrapper.appendChild(addForm);
-        // addForm.appendChild(labelInputTitle);
-        // addForm.appendChild(inputTitle);
-        // addForm.appendChild(labelSelectCategory);
-        // addForm.appendChild(selectCategory);
     })
+}
+
+function createModal() {
+    const modalWrapper = document.querySelector(".modal-wrapper")
+    const closeModalLink = document.createElement("i");
+    closeModalLink.classList.add("fa-solid", "fa-xmark");
+    closeModalLink.addEventListener("click", closeModal);
+    const modalAddTitle = document.createElement("h3");
+    modalAddTitle.textContent = "Galerie photo";
+    const modalTextError = document.createElement("p");
+    modalTextError.classList.add("error");
+    const modalPhotoCtn = document.createElement("div");
+    modalPhotoCtn.classList.add("photo-ctn");
+    const modalBorder = document.createElement("div");
+    modalBorder.classList.add("border");
+    const modalAddButton = document.createElement("button");
+    modalAddButton.classList.add("addButton")
+    modalAddButton.textContent = "Ajouter une photo"
+    const modalRemoveButton = document.createElement("button");
+    modalRemoveButton.classList.add("removeButton");
+    modalRemoveButton.textContent = "Supprimer la galerie"
+
+    // modal.appendChild(modalWrapper);
+    modalWrapper.appendChild(closeModalLink);
+    modalWrapper.appendChild(modalAddTitle);
+    modalWrapper.appendChild(modalPhotoCtn);
+    modalWrapper.appendChild(modalTextError);
+    modalWrapper.appendChild(modalBorder);
+    modalWrapper.appendChild(modalAddButton);
+    modalWrapper.appendChild(modalRemoveButton);
+
+    openAddWorks()
 }
 
 function createNewModal(modalWrapper) {
     const iconeBack = document.createElement("i");
     iconeBack.classList.add("fa-solid", "fa-arrow-left");
+    iconeBack.addEventListener("click", async () => {
+        modalWrapper.innerHTML = ""
+        createModal()
+        const works = await loadWorks()
+        displayWorksInModal(works)
+    })
     const closeModalLink = document.createElement("i");
     closeModalLink.classList.add("fa-solid", "fa-xmark");
     closeModalLink.addEventListener("click", closeModal);
     const modalAddTitle = document.createElement("h3");
     modalAddTitle.textContent = "Ajout photo";
-    // const addBox = document.createElement("div");
-    // addBox.classList.add("addBox");
-    // const iconeImg = document.createElement("i");
-    // iconeImg.classList.add("fa-regular", "fa-image");
-    // const addImgButton = document.createElement("button");
-    // addImgButton.innerText = "+ Ajouter photo";
-    // const addImgText = document.createElement("p");
-    // addImgText.innerText = "jpg, png : 4mo max";
+
     modalWrapper.appendChild(iconeBack);
     modalWrapper.appendChild(closeModalLink);
     modalWrapper.appendChild(modalAddTitle);
-    // modalWrapper.appendChild(addBox);
-    // addBox.appendChild(iconeImg);
-    // addBox.appendChild(addImgButton);
-    // addBox.appendChild(addImgText);
-    createForm(modalWrapper)
 
+    createForm(modalWrapper)
 }
 
 function createForm(modalWrapper) {
     const addForm = document.createElement("form");
+    addForm.classList.add("addForm");
     const addBox = document.createElement("div");
     addBox.classList.add("addBox");
     const iconeImg = document.createElement("i");
@@ -292,11 +282,11 @@ function createForm(modalWrapper) {
     selectCategory.id = "category";
     const border = document.createElement("div");
     border.classList.add("border");
-    const formSubmitButton = document.createElement ("input");
+    const formSubmitButton = document.createElement("input");
     formSubmitButton.classList.add("formSubmitButton");
     formSubmitButton.type = "button";
     formSubmitButton.value = "Valider";
-    
+
     modalWrapper.appendChild(addForm);
     addForm.appendChild(addBox);
     addBox.appendChild(iconeImg);
@@ -320,14 +310,16 @@ async function init() {
     filterWorks(works)
     // on modifie la page après identification
     logged()
+    // on crée la modale
+    createModal()
     // on affiche la modale
     openModal()
     // on ferme la modale
     closeModal()
     // on affiche les travaux dans la modale
     displayWorksInModal(works)
-    // on ajoute un nouveau projet
-    addWorks()
+
+
 }
 
 init()
