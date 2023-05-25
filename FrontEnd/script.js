@@ -1,4 +1,10 @@
 
+
+
+// ******************************** PROJETS - HOMEPAGE ******************************************
+
+
+
 async function loadWorks() {
     const response = await fetch("http://localhost:5678/api/works")
     const works = await response.json()
@@ -58,6 +64,12 @@ function filterWorks(works) {
     });
 }
 
+
+
+// ******************************** MODE EDITION - HOMEPAGE ******************************************
+
+
+
 // fonction de modification de l'affichage en Mode Edition
 function setModification(classObjectHtml, textHtml) {
     // on récupère et on crée les éléments à modifier
@@ -106,6 +118,45 @@ function logged() {
     }
 }
 
+
+
+// ******************************** GALERIE - MODALES ******************************************
+
+
+
+// on crée la modale galerie
+function createModal() {
+    const modalWrapper = document.querySelector(".modal-wrapper")
+    const closeModalLink = document.createElement("i");
+    closeModalLink.classList.add("fa-solid", "fa-xmark");
+    closeModalLink.addEventListener("click", closeModal);
+    const modalAddTitle = document.createElement("h3");
+    modalAddTitle.textContent = "Galerie photo";
+    const modalTextError = document.createElement("p");
+    modalTextError.classList.add("error");
+    const modalPhotoCtn = document.createElement("div");
+    modalPhotoCtn.classList.add("photo-ctn");
+    const modalBorder = document.createElement("div");
+    modalBorder.classList.add("border");
+    const modalAddButton = document.createElement("button");
+    modalAddButton.classList.add("addButton")
+    modalAddButton.textContent = "Ajouter une photo"
+    const modalRemoveButton = document.createElement("button");
+    modalRemoveButton.classList.add("removeButton");
+    modalRemoveButton.textContent = "Supprimer la galerie"
+
+    modalWrapper.appendChild(closeModalLink);
+    modalWrapper.appendChild(modalAddTitle);
+    modalWrapper.appendChild(modalPhotoCtn);
+    modalWrapper.appendChild(modalTextError);
+    modalWrapper.appendChild(modalBorder);
+    modalWrapper.appendChild(modalAddButton);
+    modalWrapper.appendChild(modalRemoveButton);
+
+    openAddWorks()
+}
+
+
 function openModal() {
     // on récupère le lien d'ouverture de la modale
     const openModalLink = document.querySelector(".modalLink");
@@ -128,7 +179,6 @@ function closeModal() {
 };
 
 function displayWorksInModal(works) {
-
     // on affiche les travaux dans la modale (cf displayWorks)
     for (let i = 0; i < works.length; i++) {
         const photo = works[i]
@@ -154,7 +204,7 @@ function moveWorks(photoElement) {
     photoElement.appendChild(iconeMovePhoto);
 }
 
-function deleteWorks(works, photoElement) {
+function deleteWorks(photo, photoElement) {
     // On ajoute l'icône de suppression
     const iconeTrashPhoto = document.createElement("i");
     iconeTrashPhoto.classList.add("fa-solid", "fa-trash-can");
@@ -163,7 +213,7 @@ function deleteWorks(works, photoElement) {
     iconeTrashPhoto.addEventListener("click", async () => {
         const error = document.querySelector(".error")
         const token = JSON.parse(sessionStorage.getItem("token"));
-        let id = works.id;
+        let id = photo.id;
         console.log(id)
         const response = await fetch(`http://localhost:5678/api/works/${id}`, {
             method: "DELETE",
@@ -192,7 +242,7 @@ function editWorks(photoElement) {
 
 function openAddWorks() {
     const addButton = document.querySelector(".addButton");
-    // au clic, on crée la modale d'ajout de projet
+    // au clic, on appelle la modale
     addButton.addEventListener("click", () => {
         const modalWrapper = document.querySelector(".modal-wrapper");
         modalWrapper.innerHTML = "";
@@ -200,39 +250,15 @@ function openAddWorks() {
     })
 }
 
-function createModal() {
-    const modalWrapper = document.querySelector(".modal-wrapper")
-    const closeModalLink = document.createElement("i");
-    closeModalLink.classList.add("fa-solid", "fa-xmark");
-    closeModalLink.addEventListener("click", closeModal);
-    const modalAddTitle = document.createElement("h3");
-    modalAddTitle.textContent = "Galerie photo";
-    const modalTextError = document.createElement("p");
-    modalTextError.classList.add("error");
-    const modalPhotoCtn = document.createElement("div");
-    modalPhotoCtn.classList.add("photo-ctn");
-    const modalBorder = document.createElement("div");
-    modalBorder.classList.add("border");
-    const modalAddButton = document.createElement("button");
-    modalAddButton.classList.add("addButton")
-    modalAddButton.textContent = "Ajouter une photo"
-    const modalRemoveButton = document.createElement("button");
-    modalRemoveButton.classList.add("removeButton");
-    modalRemoveButton.textContent = "Supprimer la galerie"
 
-    // modal.appendChild(modalWrapper);
-    modalWrapper.appendChild(closeModalLink);
-    modalWrapper.appendChild(modalAddTitle);
-    modalWrapper.appendChild(modalPhotoCtn);
-    modalWrapper.appendChild(modalTextError);
-    modalWrapper.appendChild(modalBorder);
-    modalWrapper.appendChild(modalAddButton);
-    modalWrapper.appendChild(modalRemoveButton);
 
-    openAddWorks()
-}
+// ******************************** AJOUT PHOTO - MODALES ******************************************
 
+
+
+// on crée la modale d'ajout de projet
 function createNewModal(modalWrapper) {
+    // au clic sur le bouton retour, on met à jour l'affichage et on recrée la modale galerie
     const iconeBack = document.createElement("i");
     iconeBack.classList.add("fa-solid", "fa-arrow-left");
     iconeBack.addEventListener("click", async () => {
@@ -241,6 +267,7 @@ function createNewModal(modalWrapper) {
         const works = await loadWorks()
         displayWorksInModal(works)
     })
+    // on crée la modale ajout de projet
     const closeModalLink = document.createElement("i");
     closeModalLink.classList.add("fa-solid", "fa-xmark");
     closeModalLink.addEventListener("click", closeModal);
@@ -251,9 +278,11 @@ function createNewModal(modalWrapper) {
     modalWrapper.appendChild(closeModalLink);
     modalWrapper.appendChild(modalAddTitle);
 
+    // on ajoute le formulaire
     createForm(modalWrapper)
 }
 
+// on crée le formulaire
 function createForm(modalWrapper) {
     const addForm = document.createElement("form");
     addForm.classList.add("addForm");
@@ -261,10 +290,15 @@ function createForm(modalWrapper) {
     addBox.classList.add("addBox");
     const iconeImg = document.createElement("i");
     iconeImg.classList.add("fa-regular", "fa-image");
-    const addImgButton = document.createElement("input");
-    addImgButton.type = "button";
-    addImgButton.value = "+ Ajouter photo";
+    const addImgButton = document.createElement("button");
+    addImgButton.innerText = "+ Ajouter photo";
     addImgButton.classList.add("addImgButton")
+    const inputFileBtn = document.createElement("input");
+    inputFileBtn.type = "file";
+    inputFileBtn.accept = ".jpg, .png"
+    inputFileBtn.classList.add("inputFileBtn");
+    const photoPreview = document.createElement("img");
+    photoPreview.id = "photoPreview";
     const addImgText = document.createElement("p");
     addImgText.innerText = "jpg, png : 4mo max";
     const inputCtn = document.createElement("div")
@@ -291,6 +325,8 @@ function createForm(modalWrapper) {
     addForm.appendChild(addBox);
     addBox.appendChild(iconeImg);
     addBox.appendChild(addImgButton);
+    addBox.appendChild(inputFileBtn);
+    addBox.appendChild(photoPreview);
     addBox.appendChild(addImgText);
     addForm.appendChild(inputCtn);
     inputCtn.appendChild(labelInputTitle);
@@ -299,7 +335,60 @@ function createForm(modalWrapper) {
     inputCtn.appendChild(selectCategory);
     addForm.appendChild(border);
     addForm.appendChild(formSubmitButton);
+
+    // on ajoute les catégories au sélecteur
+    insertCategories(selectCategory)
+
+    // on affiche l'image à ajouter
+    inputFileBtn.onchange = () => {
+        const [file] = inputFileBtn.files;
+        if (file) {
+            photoPreview.src = URL.createObjectURL(file)
+            addImgButton.classList.add("modalHide")
+        }
+    }
+
+    formSubmitButton.addEventListener("click", () => {
+        postNewWork()
+    })
+   
 }
+
+// on importe le tableau des catégories
+async function loadCategories() {
+    const response = await fetch("http://localhost:5678/api/categories")
+    const categories = await response.json()
+    console.log(categories)
+    return categories;
+    
+}
+
+// on insère les catégories dans le sélecteur
+async function insertCategories(selectCategory) {
+    const categories = await loadCategories()
+    for (let i = 0; i < categories.length; i++) {
+        // const category = categories[i];
+        const option = document.createElement("option");
+        selectCategory.appendChild(option);
+        option.innerHTML = categories[i].name;
+    }
+}
+
+// postNewWork()
+// On envoie le nouveau projet
+//  - au clic
+//      - vérifier remplissage
+//      - modifier bouton
+//      - créer formdata
+//      - envoyer requete
+//      - retour homepage
+//      - mise à jour affichage
+
+
+
+// ******************************** INIT FONCTIONS ******************************************
+
+
 
 async function init() {
     // on veut récupérer la liste des works
@@ -317,9 +406,7 @@ async function init() {
     // on ferme la modale
     closeModal()
     // on affiche les travaux dans la modale
-    displayWorksInModal(works)
-
-
+    displayWorksInModal(works)   
 }
 
 init()
