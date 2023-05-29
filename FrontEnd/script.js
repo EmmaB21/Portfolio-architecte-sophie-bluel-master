@@ -124,9 +124,37 @@ function logged() {
 
 
 
+function openModal() {
+    // on récupère le lien d'ouverture de la modale
+    const openModalLink = document.querySelector(".modalLink");
+    // au clic, on affiche la modale en supprimant la classe css contenant le display:none
+    openModalLink.addEventListener("click", async () => {
+        const displayModal = document.querySelector(".modal");
+        // on appelle la création de modale
+        createModal();
+        // on appelle l'affichage des projets
+
+        // on enlève le display none
+        displayModal.classList.remove("modalHide");
+        // on met en place les modalités de fermeture de la modale
+        displayModal.addEventListener("click", closeModal);
+        const closeModalLink = document.querySelector(".fa-xmark");
+        closeModalLink.addEventListener("click", closeModal);
+        displayModal.querySelector(".modal-wrapper").addEventListener("click", (e => e.stopPropagation()));
+        // closeModal();
+    });
+}
+
+function closeModal() {
+    // on ferme la modale en remettant la classe css contenant le display:none
+    const hideModal = document.querySelector(".modal");
+    hideModal.classList.add("modalHide");
+};
+
 // on crée la modale galerie
-function createModal() {
+async function createModal() {
     const modalWrapper = document.querySelector(".modal-wrapper")
+    modalWrapper.innerHTML = "";
     const closeModalLink = document.createElement("i");
     closeModalLink.classList.add("fa-solid", "fa-xmark");
     closeModalLink.addEventListener("click", closeModal);
@@ -153,30 +181,10 @@ function createModal() {
     modalWrapper.appendChild(modalAddButton);
     modalWrapper.appendChild(modalRemoveButton);
 
+    const works = await loadWorks()
+    displayWorksInModal(works);
     openAddWorks()
 }
-
-
-function openModal() {
-    // on récupère le lien d'ouverture de la modale
-    const openModalLink = document.querySelector(".modalLink");
-    // au clic, on affiche la modale en supprimant la classe css contenant le display:none
-    openModalLink.addEventListener("click", () => {
-        const displayModal = document.querySelector(".modal");
-        displayModal.classList.remove("modalHide");
-        // on met en place les modalités de fermeture de la modale
-        displayModal.addEventListener("click", closeModal);
-        const closeModalLink = document.querySelector(".fa-xmark");
-        closeModalLink.addEventListener("click", closeModal);
-        displayModal.querySelector(".modal-wrapper").addEventListener("click", (e => e.stopPropagation()));
-    });
-}
-
-function closeModal() {
-    // on ferme la modale en remettant la classe css contenant le display:none
-    const hideModal = document.querySelector(".modal");
-    hideModal.classList.add("modalHide");
-};
 
 function displayWorksInModal(works) {
     // on affiche les travaux dans la modale (cf displayWorks)
@@ -261,11 +269,8 @@ function createNewModal(modalWrapper) {
     // au clic sur le bouton retour, on met à jour l'affichage et on recrée la modale galerie
     const iconeBack = document.createElement("i");
     iconeBack.classList.add("fa-solid", "fa-arrow-left");
-    iconeBack.addEventListener("click", async () => {
-        modalWrapper.innerHTML = ""
+    iconeBack.addEventListener("click", () => {
         createModal()
-        const works = await loadWorks()
-        displayWorksInModal(works)
     })
     // on crée la modale ajout de projet
     const closeModalLink = document.createElement("i");
@@ -304,13 +309,13 @@ function createForm(modalWrapper) {
     const inputCtn = document.createElement("div")
     inputCtn.classList.add("inputCtn");
     const labelInputTitle = document.createElement("label");
-    labelInputTitle.for = "Title";
+    labelInputTitle.setAttribute("for", "Title");
     labelInputTitle.innerText = "Titre";
     const inputTitle = document.createElement("input");
     inputTitle.id = "Title";
     inputTitle.type = "text";
     const labelSelectCategory = document.createElement("label");
-    labelSelectCategory.for = "category";
+    labelSelectCategory.setAttribute("for", "category");
     labelSelectCategory.innerText = "Catégorie";
     const selectCategory = document.createElement("select");
     selectCategory.id = "category";
@@ -318,8 +323,9 @@ function createForm(modalWrapper) {
     border.classList.add("border");
     const formSubmitButton = document.createElement("input");
     formSubmitButton.classList.add("formSubmitButton");
-    formSubmitButton.type = "button";
+    formSubmitButton.type = "submit";
     formSubmitButton.value = "Valider";
+    formSubmitButton.disabled = true;
 
     modalWrapper.appendChild(addForm);
     addForm.appendChild(addBox);
@@ -348,41 +354,86 @@ function createForm(modalWrapper) {
         }
     }
 
-    formSubmitButton.addEventListener("click", () => {
-        postNewWork()
+    // On écoute les événements de modification des champs
+    inputFileBtn.addEventListener("change", validateForm);
+    inputTitle.addEventListener("input", validateForm);
+    selectCategory.addEventListener("change", validateForm);
+
+    // Validation du formulaire
+    function validateForm() {
+        // On vérifie si les champs sont remplis
+        if (inputFileBtn.value !== "" && inputTitle.value !== "" && selectCategory.value !== "0") {
+            formSubmitButton.disabled = false; // On active le bouton "submit"
+            formSubmitButton.classList.add("sendForm")
+        } else {
+            formSubmitButton.classList.remove("sendForm")
+            formSubmitButton.disabled = true; // On désactive le bouton "submit"
+        }
+    }
+
+    // On écoute l'envoi du nouveau projet
+    formSubmitButton.addEventListener("click", (e) => {
+        postNewWork(inputFileBtn, inputTitle, selectCategory)
+        e.preventDefault()
     })
-   
+
 }
 
-// on importe le tableau des catégories
+// On importe le tableau des catégories
 async function loadCategories() {
     const response = await fetch("http://localhost:5678/api/categories")
     const categories = await response.json()
     console.log(categories)
     return categories;
-    
+
 }
 
-// on insère les catégories dans le sélecteur
+// On insère les catégories dans le sélecteur
 async function insertCategories(selectCategory) {
     const categories = await loadCategories()
+    categories.unshift({ id: 0, name: "" });
+    console.log(categories)
     for (let i = 0; i < categories.length; i++) {
         // const category = categories[i];
         const option = document.createElement("option");
         selectCategory.appendChild(option);
         option.innerHTML = categories[i].name;
+        option.value = categories[i].id;
+    }
+};
+
+// On envoie le nouveau projet
+async function postNewWork(inputFileBtn, inputTitle, selectCategory) {
+
+    const formData = new FormData();
+    const newWorkImg = inputFileBtn.files[0];
+    const newWorkTitle = inputTitle.value;
+    const newWorkCategory = selectCategory.value;
+    const token = JSON.parse(sessionStorage.getItem("token"));
+
+    formData.append("image", newWorkImg);
+    formData.append("title", newWorkTitle);
+    formData.append("category", newWorkCategory);
+
+    console.log(...formData)
+
+    const response = await fetch("http://localhost:5678/api/works", {
+        method: "POST",
+        headers: {
+            "accept": "application/json",
+            // "Content-Type": "multipart/form-data",
+            "Authorization": `Bearer ${token.token}`,
+        },
+        body: formData
+    })
+    .catch("error")
+
+    if (response.ok) {
+        createModal()
+        const works = await loadWorks();
+        displayWorks(works);
     }
 }
-
-// postNewWork()
-// On envoie le nouveau projet
-//  - au clic
-//      - vérifier remplissage
-//      - modifier bouton
-//      - créer formdata
-//      - envoyer requete
-//      - retour homepage
-//      - mise à jour affichage
 
 
 
@@ -399,16 +450,10 @@ async function init() {
     filterWorks(works)
     // on modifie la page après identification
     logged()
-    // on crée la modale
-    createModal()
     // on affiche la modale
     openModal()
-    // on ferme la modale
-    closeModal()
-    // on affiche les travaux dans la modale
-    displayWorksInModal(works)   
+
 }
 
 init()
-
 
