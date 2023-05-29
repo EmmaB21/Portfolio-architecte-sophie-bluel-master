@@ -104,6 +104,7 @@ function logged() {
     console.log(isLogged);
     // On modifie l'affichage du lien login
     (isLogged) ? loginLink.innerHTML = "logout" : "login";
+    (isLogged) ? loginLink.href = "./index.html" : "./login.html";
     loginLink.addEventListener("click", () => {
         sessionStorage.removeItem("token");
     })
@@ -132,8 +133,6 @@ function openModal() {
         const displayModal = document.querySelector(".modal");
         // on appelle la création de modale
         createModal();
-        // on appelle l'affichage des projets
-
         // on enlève le display none
         displayModal.classList.remove("modalHide");
         // on met en place les modalités de fermeture de la modale
@@ -141,7 +140,6 @@ function openModal() {
         const closeModalLink = document.querySelector(".fa-xmark");
         closeModalLink.addEventListener("click", closeModal);
         displayModal.querySelector(".modal-wrapper").addEventListener("click", (e => e.stopPropagation()));
-        // closeModal();
     });
 }
 
@@ -160,8 +158,8 @@ async function createModal() {
     closeModalLink.addEventListener("click", closeModal);
     const modalAddTitle = document.createElement("h3");
     modalAddTitle.textContent = "Galerie photo";
-    const modalTextError = document.createElement("p");
-    modalTextError.classList.add("error");
+    // const modalTextError = document.createElement("p");
+    // modalTextError.classList.add("error");
     const modalPhotoCtn = document.createElement("div");
     modalPhotoCtn.classList.add("photo-ctn");
     const modalBorder = document.createElement("div");
@@ -176,7 +174,7 @@ async function createModal() {
     modalWrapper.appendChild(closeModalLink);
     modalWrapper.appendChild(modalAddTitle);
     modalWrapper.appendChild(modalPhotoCtn);
-    modalWrapper.appendChild(modalTextError);
+    // modalWrapper.appendChild(modalTextError);
     modalWrapper.appendChild(modalBorder);
     modalWrapper.appendChild(modalAddButton);
     modalWrapper.appendChild(modalRemoveButton);
@@ -219,10 +217,9 @@ function deleteWorks(photo, photoElement) {
     photoElement.appendChild(iconeTrashPhoto);
     // On supprime le projet au clic sur l'icône
     iconeTrashPhoto.addEventListener("click", async () => {
-        const error = document.querySelector(".error")
         const token = JSON.parse(sessionStorage.getItem("token"));
         let id = photo.id;
-        console.log(id)
+
         const response = await fetch(`http://localhost:5678/api/works/${id}`, {
             method: "DELETE",
             headers: {
@@ -237,7 +234,7 @@ function deleteWorks(photo, photoElement) {
             displayWorksInModal(works);
             displayWorks(works);
         }
-        else error.textContent = "Erreur. Veuillez essayer de vous reconnecter"
+        // else error.textContent = "Erreur. Veuillez essayer de vous reconnecter"
     })
 }
 
@@ -326,6 +323,7 @@ function createForm(modalWrapper) {
     formSubmitButton.type = "submit";
     formSubmitButton.value = "Valider";
     formSubmitButton.disabled = true;
+    // const formError = document.createElement("p");
 
     modalWrapper.appendChild(addForm);
     addForm.appendChild(addBox);
@@ -341,6 +339,7 @@ function createForm(modalWrapper) {
     inputCtn.appendChild(selectCategory);
     addForm.appendChild(border);
     addForm.appendChild(formSubmitButton);
+    // addForm.appendChild(formError);
 
     // on ajoute les catégories au sélecteur
     insertCategories(selectCategory)
@@ -376,25 +375,20 @@ function createForm(modalWrapper) {
         postNewWork(inputFileBtn, inputTitle, selectCategory)
         e.preventDefault()
     })
-
 }
 
 // On importe le tableau des catégories
 async function loadCategories() {
     const response = await fetch("http://localhost:5678/api/categories")
     const categories = await response.json()
-    console.log(categories)
     return categories;
-
 }
 
 // On insère les catégories dans le sélecteur
 async function insertCategories(selectCategory) {
     const categories = await loadCategories()
-    categories.unshift({ id: 0, name: "" });
-    console.log(categories)
+    categories.unshift({ id: 0, name: "Choisissez une catégorie :" });
     for (let i = 0; i < categories.length; i++) {
-        // const category = categories[i];
         const option = document.createElement("option");
         selectCategory.appendChild(option);
         option.innerHTML = categories[i].name;
@@ -421,12 +415,12 @@ async function postNewWork(inputFileBtn, inputTitle, selectCategory) {
         method: "POST",
         headers: {
             "accept": "application/json",
-            // "Content-Type": "multipart/form-data",
             "Authorization": `Bearer ${token.token}`,
         },
         body: formData
     })
-    .catch("error")
+
+    // .catch(error.textContent = "Problème de connexion au serveur")
 
     if (response.ok) {
         createModal()

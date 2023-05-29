@@ -19,6 +19,7 @@ function login() {
             body: JSON.stringify(logData)
         })
             .catch(error.textContent = "Problème de connexion au serveur")
+            
         // On stocke le token récupéré dans le localStorage
         const token = await response.json();
         sessionStorage.setItem("token", JSON.stringify(token));
