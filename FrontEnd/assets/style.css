@@ -332,6 +332,11 @@ li:hover {
 	height: 36px;
 }
 
+.contact .submitBtn:hover,
+.login_form .submitBtn:hover {
+	background-color: #0E2F28;
+}
+
 .nav_login {
 	font-weight: 600;
 }

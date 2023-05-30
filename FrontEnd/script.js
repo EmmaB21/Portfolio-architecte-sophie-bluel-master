@@ -99,10 +99,9 @@ function logged() {
     // On récupère le token
     const loginLink = document.querySelector(".login__link");
     let token = sessionStorage.getItem("token")
-    console.log(token)
     const isLogged = token ? true : false;
     console.log(isLogged);
-    // On modifie l'affichage du lien login
+    // On modifie l'affichage et la redirection du lien login
     (isLogged) ? loginLink.innerHTML = "logout" : "login";
     (isLogged) ? loginLink.href = "./index.html" : "./login.html";
     loginLink.addEventListener("click", () => {
@@ -158,8 +157,6 @@ async function createModal() {
     closeModalLink.addEventListener("click", closeModal);
     const modalAddTitle = document.createElement("h3");
     modalAddTitle.textContent = "Galerie photo";
-    // const modalTextError = document.createElement("p");
-    // modalTextError.classList.add("error");
     const modalPhotoCtn = document.createElement("div");
     modalPhotoCtn.classList.add("photo-ctn");
     const modalBorder = document.createElement("div");
@@ -174,7 +171,6 @@ async function createModal() {
     modalWrapper.appendChild(closeModalLink);
     modalWrapper.appendChild(modalAddTitle);
     modalWrapper.appendChild(modalPhotoCtn);
-    // modalWrapper.appendChild(modalTextError);
     modalWrapper.appendChild(modalBorder);
     modalWrapper.appendChild(modalAddButton);
     modalWrapper.appendChild(modalRemoveButton);
@@ -220,21 +216,22 @@ function deleteWorks(photo, photoElement) {
         const token = JSON.parse(sessionStorage.getItem("token"));
         let id = photo.id;
 
-        const response = await fetch(`http://localhost:5678/api/works/${id}`, {
-            method: "DELETE",
-            headers: {
-                "Accept": "*/*",
-                "Authorization": `Bearer ${token.token}`
+        try {
+            const response = await fetch(`http://localhost:5678/api/works/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "Accept": "*/*",
+                    "Authorization": `Bearer ${token.token}`
+                }
+            })
+            if (response.ok) {
+                // On met l'affichage à jour
+                document.querySelector(".photo-ctn").innerHTML = "";
+                const works = await loadWorks();
+                displayWorksInModal(works);
+                displayWorks(works);
             }
-        })
-        if (response.ok) {
-            // On met l'affichage à jour
-            document.querySelector(".photo-ctn").innerHTML = "";
-            const works = await loadWorks();
-            displayWorksInModal(works);
-            displayWorks(works);
-        }
-        // else error.textContent = "Erreur. Veuillez essayer de vous reconnecter"
+        } catch (error) { alert("problème de connexion au serveur") }
     })
 }
 
@@ -323,7 +320,6 @@ function createForm(modalWrapper) {
     formSubmitButton.type = "submit";
     formSubmitButton.value = "Valider";
     formSubmitButton.disabled = true;
-    // const formError = document.createElement("p");
 
     modalWrapper.appendChild(addForm);
     addForm.appendChild(addBox);
@@ -339,7 +335,6 @@ function createForm(modalWrapper) {
     inputCtn.appendChild(selectCategory);
     addForm.appendChild(border);
     addForm.appendChild(formSubmitButton);
-    // addForm.appendChild(formError);
 
     // on ajoute les catégories au sélecteur
     insertCategories(selectCategory)
@@ -411,22 +406,21 @@ async function postNewWork(inputFileBtn, inputTitle, selectCategory) {
 
     console.log(...formData)
 
-    const response = await fetch("http://localhost:5678/api/works", {
-        method: "POST",
-        headers: {
-            "accept": "application/json",
-            "Authorization": `Bearer ${token.token}`,
-        },
-        body: formData
-    })
-
-    // .catch(error.textContent = "Problème de connexion au serveur")
-
-    if (response.ok) {
-        createModal()
-        const works = await loadWorks();
-        displayWorks(works);
-    }
+    try {
+        const response = await fetch("http://localhost:5678/api/works", {
+            method: "POST",
+            headers: {
+                "accept": "application/json",
+                "Authorization": `Bearer ${token.token}`,
+            },
+            body: formData
+        })
+        if (response.ok) {
+            createModal()
+            const works = await loadWorks();
+            displayWorks(works);
+        }
+    } catch (error) { alert("problème de connexion au serveur") }
 }
 
 

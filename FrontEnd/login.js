@@ -10,22 +10,32 @@ function login() {
             password: event.target.querySelector("[name=motDePasse]").value
         }
         // On envoie les données
-        const response = await fetch("http://localhost:5678/api/users/login", {
-            method: "POST",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(logData)
-        })
-            .catch(error.textContent = "Problème de connexion au serveur")
+        try {
+            const response = await fetch("http://localhost:5678/api/users/login", {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(logData)
+            })
+
+            // On stocke le token récupéré dans le localStorage
+            const token = await response.json();
+            sessionStorage.setItem("token", JSON.stringify(token));
+
+            // on redirige ou on affiche un message d'erreur
+            (response.ok) ? window.location.href = "./index.html" : error.textContent = "Nom d'utilisateur ou mot de passe incorrect"
             
-        // On stocke le token récupéré dans le localStorage
-        const token = await response.json();
-        sessionStorage.setItem("token", JSON.stringify(token));
-        
-        // on redirige ou on affiche un message d'erreur
-        (response.ok) ? window.location.href = "./index.html" : error.textContent = "Nom d'utilisateur ou mot de passe incorrect"
+        } catch (error) { alert("problème de connexion au serveur") }
+        // .catch(error.textContent = "Problème de connexion au serveur")
+
+        // // On stocke le token récupéré dans le localStorage
+        // const token = await response.json();
+        // sessionStorage.setItem("token", JSON.stringify(token));
+
+        // // on redirige ou on affiche un message d'erreur
+        // (response.ok) ? window.location.href = "./index.html" : error.textContent = "Nom d'utilisateur ou mot de passe incorrect"
     })
 }
 
