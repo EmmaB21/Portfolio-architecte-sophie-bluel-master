@@ -340,13 +340,13 @@ function createForm(modalWrapper) {
     insertCategories(selectCategory)
 
     // on affiche l'image à ajouter
-    inputFileBtn.onchange = () => {
+    inputFileBtn.addEventListener ("change", () => {
         const [file] = inputFileBtn.files;
         if (file) {
             photoPreview.src = URL.createObjectURL(file)
             addImgButton.classList.add("modalHide")
         }
-    }
+    })
 
     // On écoute les événements de modification des champs
     inputFileBtn.addEventListener("change", validateForm);
@@ -403,8 +403,6 @@ async function postNewWork(inputFileBtn, inputTitle, selectCategory) {
     formData.append("image", newWorkImg);
     formData.append("title", newWorkTitle);
     formData.append("category", newWorkCategory);
-
-    console.log(...formData)
 
     try {
         const response = await fetch("http://localhost:5678/api/works", {
